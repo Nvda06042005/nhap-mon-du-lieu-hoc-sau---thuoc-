@@ -1,0 +1,90 @@
+{
+  "dataset": {
+    "num_classes": 100,
+    "train_size": 15976,
+    "val_size": 3995,
+    "test_size": 4427,
+    "image_size": "224x224",
+    "augmentation": "RandomCrop, HFlip, VFlip, Rotation, ColorJitter"
+  },
+  "models": {
+    "ResNet-50": {
+      "test_metrics": {
+        "accuracy": 0.8118364580980348,
+        "precision": 0.7221986318961748,
+        "recall": 0.8148737935750492,
+        "f1": 0.735342054918258
+      },
+      "best_val_acc": 0.8155193992490614,
+      "training_time_seconds": 1911.4339499473572,
+      "epochs_trained": 30,
+      "overfitting_analysis": {
+        "model": "ResNet-50",
+        "epochs_trained": 30,
+        "best_val_acc": 0.8155,
+        "best_val_epoch": 28,
+        "final_train_acc": 0.885,
+        "final_val_acc": 0.803,
+        "accuracy_gap": 0.0819,
+        "final_train_loss": 0.3737,
+        "final_val_loss": 0.6024,
+        "loss_gap": 0.2287,
+        "overfitting_level": "TRUNG B\u00ccNH (Moderate Overfitting)",
+        "suggestion": "C\u00f3 th\u1ec3 ch\u1ea5p nh\u1eadn. Th\u1eed t\u0103ng nh\u1eb9 Dropout ho\u1eb7c th\u00eam regularization.",
+        "underfitting_note": "Val accuracy \u1edf m\u1ee9c ch\u1ea5p nh\u1eadn."
+      }
+    },
+    "EfficientNet-B0": {
+      "test_metrics": {
+        "accuracy": 0.8676304495143438,
+        "precision": 0.7820247994944775,
+        "recall": 0.8652137826142503,
+        "f1": 0.8048501273238762
+      },
+      "best_val_acc": 0.8690863579474343,
+      "training_time_seconds": 1994.9763445854187,
+      "epochs_trained": 30,
+      "overfitting_analysis": {
+        "model": "EfficientNet-B0",
+        "epochs_trained": 30,
+        "best_val_acc": 0.8691,
+        "best_val_epoch": 30,
+        "final_train_acc": 0.9301,
+        "final_val_acc": 0.8691,
+        "accuracy_gap": 0.0611,
+        "final_train_loss": 0.233,
+        "final_val_loss": 0.4093,
+        "loss_gap": 0.1763,
+        "overfitting_level": "TH\u1ea4P (Mild Overfitting)",
+        "suggestion": "T\u1ed1t. Model generalize kh\u00e1 t\u1ed1t.",
+        "underfitting_note": "Val accuracy \u1edf m\u1ee9c ch\u1ea5p nh\u1eadn."
+      }
+    },
+    "ViT-B/16": {
+      "test_metrics": {
+        "accuracy": 0.9518861531511181,
+        "precision": 0.9187392325405784,
+        "recall": 0.8987036640560615,
+        "f1": 0.898913958201055
+      },
+      "best_val_acc": 0.9536921151439299,
+      "training_time_seconds": 5044.9152846336365,
+      "epochs_trained": 30,
+      "overfitting_analysis": {
+        "model": "ViT-B/16",
+        "epochs_trained": 30,
+        "best_val_acc": 0.9537,
+        "best_val_epoch": 26,
+        "final_train_acc": 0.9976,
+        "final_val_acc": 0.9524,
+        "accuracy_gap": 0.0452,
+        "final_train_loss": 0.0078,
+        "final_val_loss": 0.2624,
+        "loss_gap": 0.2546,
+        "overfitting_level": "TH\u1ea4P (Mild Overfitting)",
+        "suggestion": "T\u1ed1t. Model generalize kh\u00e1 t\u1ed1t.",
+        "underfitting_note": "Val accuracy \u1edf m\u1ee9c ch\u1ea5p nh\u1eadn."
+      }
+    }
+  }
+}

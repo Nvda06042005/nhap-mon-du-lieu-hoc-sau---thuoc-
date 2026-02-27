@@ -1,0 +1,15 @@
+# Virtual environment
+.venv/
+__pycache__/
+
+# Dataset (quá lớn cho GitHub)
+dataset/
+archive/
+
+# Model weights (quá lớn cho GitHub)
+results/*.pth
+
+# Misc
+*.pyc
+.DS_Store
+Thumbs.db
