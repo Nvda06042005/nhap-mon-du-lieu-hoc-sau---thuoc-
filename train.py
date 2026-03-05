@@ -320,7 +320,7 @@ def train_model(model, model_name, train_loader, val_loader, config):
     
     best_val_acc = 0.0
     best_model_state = None
-    patience = 7
+    patience = 5
     patience_counter = 0
     
     start_time = time.time()
@@ -410,19 +410,23 @@ def plot_training_curves(history, model_name, output_dir):
 
 
 def plot_confusion_matrix(y_true, y_pred, model_name, num_classes, output_dir, idx_to_class=None):
-    """Vẽ Confusion Matrix."""
+    """Vẽ Confusion Matrix (tỉ lệ %)."""
     cm = confusion_matrix(y_true, y_pred)
+    # Normalize theo hàng (true label) → tỉ lệ %
+    cm_norm = cm.astype('float') / cm.sum(axis=1, keepdims=True)
+    cm_norm = np.nan_to_num(cm_norm)  # tránh chia 0
     
     fig, ax = plt.subplots(figsize=(20, 18))
     
     if num_classes <= 30:
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax,
-                    xticklabels=range(num_classes), yticklabels=range(num_classes))
+        sns.heatmap(cm_norm, annot=True, fmt='.1%', cmap='Blues', ax=ax,
+                    xticklabels=range(num_classes), yticklabels=range(num_classes),
+                    vmin=0, vmax=1)
     else:
         # Quá nhiều class → không annotate
-        sns.heatmap(cm, annot=False, cmap='Blues', ax=ax)
+        sns.heatmap(cm_norm, annot=False, cmap='Blues', ax=ax, vmin=0, vmax=1)
     
-    ax.set_title(f'{model_name} - Confusion Matrix ({num_classes} classes)', fontsize=14)
+    ax.set_title(f'{model_name} - Confusion Matrix % ({num_classes} classes)', fontsize=14)
     ax.set_xlabel('Predicted Label', fontsize=12)
     ax.set_ylabel('True Label', fontsize=12)
     
@@ -436,7 +440,7 @@ def plot_confusion_matrix(y_true, y_pred, model_name, num_classes, output_dir, i
 
 
 def plot_top_classes_cm(y_true, y_pred, model_name, output_dir, top_n=20):
-    """Vẽ confusion matrix cho top N classes có nhiều mẫu nhất (dễ đọc hơn)."""
+    """Vẽ confusion matrix tỉ lệ % cho top N classes có nhiều mẫu nhất."""
     class_counts = Counter(y_true)
     top_classes = [c for c, _ in class_counts.most_common(top_n)]
     
@@ -445,11 +449,13 @@ def plot_top_classes_cm(y_true, y_pred, model_name, output_dir, top_n=20):
     y_pred_top = y_pred[mask]
     
     cm = confusion_matrix(y_true_top, y_pred_top, labels=top_classes)
+    cm_norm = cm.astype('float') / cm.sum(axis=1, keepdims=True)
+    cm_norm = np.nan_to_num(cm_norm)
     
     fig, ax = plt.subplots(figsize=(12, 10))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax,
-                xticklabels=top_classes, yticklabels=top_classes)
-    ax.set_title(f'{model_name} - Confusion Matrix (Top {top_n} classes)', fontsize=14)
+    sns.heatmap(cm_norm, annot=True, fmt='.1%', cmap='Blues', ax=ax,
+                xticklabels=top_classes, yticklabels=top_classes, vmin=0, vmax=1)
+    ax.set_title(f'{model_name} - Confusion Matrix % (Top {top_n} classes)', fontsize=14)
     ax.set_xlabel('Predicted', fontsize=12)
     ax.set_ylabel('True', fontsize=12)
     plt.tight_layout()
