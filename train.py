@@ -26,7 +26,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
-from PIL import Image
 
 import torch
 import torch.nn as nn
@@ -53,28 +52,30 @@ def safe_name(name):
 # =====================================================================
 class Config:
     # Paths - đọc từ 3 thư mục đã chia sẵn
-    DATASET_DIR = r'd:\projectdulieuhocsau17\dataset'
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATASET_DIR = os.path.join(BASE_DIR, 'dataset')
     TRAIN_DIR = os.path.join(DATASET_DIR, 'train')
     VAL_DIR = os.path.join(DATASET_DIR, 'val')
     TEST_DIR = os.path.join(DATASET_DIR, 'test')
-    OUTPUT_DIR = r'd:\projectdulieuhocsau17\results'
+    OUTPUT_DIR = os.path.join(BASE_DIR, 'results')
     
     # Dataset
     IMG_SIZE = 224                 # Resize cho ResNet/EfficientNet/ViT
     
     # Training
-    BATCH_SIZE = 32               # RTX 3050 4GB: mặc định cho ResNet/EfficientNet
-    NUM_EPOCHS = 15
+    BATCH_SIZE = 64               # RTX 4060 8GB: tăng batch size
+    NUM_EPOCHS = 5
     LEARNING_RATE = 1e-4
     WEIGHT_DECAY = 1e-4
-    NUM_WORKERS = 2               # GPU mode: dùng 2 workers load data song song
-    USE_AMP = True                 # Mixed Precision (FP16) → tiết kiệm VRAM, tăng tốc
+    NUM_WORKERS = 4               # RTX 4060: tăng workers load data nhanh hơn
+    USE_AMP = True                # Mixed Precision (FP16) → tiết kiệm VRAM, tăng tốc
+    PIN_MEMORY = True             # Tăng tốc transfer CPU → GPU
     
-    # Batch size riêng cho từng model (RTX 3050 4GB VRAM)
+    # Batch size riêng cho từng model (RTX 4060 8GB VRAM)
     MODEL_BATCH_SIZE = {
-        'resnet50': 32,
-        'efficientnet_b0': 32,
-        'vit': 16,              # ViT lớn hơn, giảm batch để không tràn VRAM
+        'resnet50': 64,
+        'efficientnet_b0': 64,
+        'vit': 32,              # ViT lớn hơn nhưng 8GB đủ chạy batch 32
     }
     
     # Device
@@ -90,6 +91,7 @@ def set_seed(seed):
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.benchmark = True   # Tự động chọn algorithm nhanh nhất cho GPU
 
 
 # =====================================================================
